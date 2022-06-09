@@ -3,6 +3,10 @@
 //  *Fight all enemy robots
 //  *Defeat each enemy robot
 //"LOSE" - Player robot's health is zero or less
+var randomNumber = function(min, max) {
+    var value = Math.floor(Math.random() * (max - min + 1) + min);
+    return value;
+};
 
 var playerName = window.prompt("What is your robot's name?")
 var playerHealth = 100;
@@ -34,14 +38,16 @@ var fight = function(enemyName) {
 
         if (confirmSkip) {
             window.alert(playerName + " has decided to skip this fight. Goodbye!");
-            playerMoney = playerMoney - 2;
+            playerMoney = Math.max(0,playerMoney - 10);
             console.log("playerMoney", playerMoney);
             break;
         }
     }
 
+    //generate random damage value based on player's attack power
+    var damage = randomNumber(playerAttack - 3, playerAttack);
     //subtract the value of playerAttack from enemyHealth and use that result to update enemyHealth variable
-    enemyHealth = enemyHealth - playerAttack;
+    enemyHealth = Math.max(0, enemyHealth - damage);
     //log resulting message to console
     console.log(
         playerName + " attacked" + enemyName + ". " + enemyName + " now has" + enemyHealth + " health remaining."
@@ -54,8 +60,10 @@ var fight = function(enemyName) {
     } else {
         window.alert(enemyName + " still has " + enemyHealth + " health left.");
     }
+
+    var damage = randomNumber(enemyAttack - 3, enemyAttack);
     //subtract the value of enemyAttack from playerHealth and use that result to update playerHealth variable
-    playerHealth = playerHealth - enemyAttack;
+    playerHealth = Math.max(0,playerHealth - damage);
     //log resulting message to console
     console.log(
         enemyName + " attacked" + playerName + ". " + playerName + " now has" + playerHealth + " health remaining."
@@ -80,7 +88,7 @@ var startGame = function() {
         if (playerHealth > 0) {
             window.alert("Welcome to Robot Gladiators! Round " + (i + 1));
             var pickedEnemyName = enemyNames[i];
-            enemyHealth = 50;
+            enemyHealth = randomNumber(40, 60);
             fight(pickedEnemyName);
 
             // if we're not at the last enemy in the array
